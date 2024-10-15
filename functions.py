@@ -16,3 +16,26 @@ def calc_prices(S, K, sigma, r, T):
         return call, put
     else:
         return None
+
+# calculates the greeks of the option for a given option type
+def calc_greeks(S, K, sigma, r, T, option_type):
+    d1, d2 = get_intermediates(S, K, sigma, r, T)
+
+    delta, theta, rho = 0, 0, 0
+    gamma = norm.pdf(d1) / (S * sigma * sqrt(T))
+    vega = S * norm.pdf(d1) * sqrt(T)
+
+    if option_type == 'call':
+        delta = norm.cdf(d1)
+        theta = -S * norm.pdf(d1) * sigma / (2 * sqrt(T)) - r * K * exp(-r * T) * norm.cdf(d2)
+        rho = K * T * exp(-r * T) * norm.cdf(d2)
+
+    elif option_type == 'put':
+        delta = norm.cdf(d1) - 1
+        theta = -S * norm.pdf(d1) * sigma / (2 * sqrt(T)) + r * K * exp(-r * T) * norm.cdf(-d2)
+        rho = -K * T * exp(-r * T) * norm.cdf(-d2)
+
+    return delta, gamma, theta, vega, rho
+
+# def put_call_parity(S, K, r, T, call, put):
+#     return call - put - S + K * exp
