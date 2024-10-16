@@ -37,5 +37,6 @@ def calc_greeks(S, K, sigma, r, T, option_type):
 
     return delta, gamma, theta, vega, rho
 
-# def put_call_parity(S, K, r, T, call, put):
-#     return call - put - S + K * exp
+# calculates the PnL of the option compared to purchase price
+def calc_pnl(purchase_price, option_price):
+    return option_price - purchase_price
